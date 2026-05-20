@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Functions – Interactive Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #724b9e;
+    --purple-light: #ede6f7;
+    --yellow: #e8d227;
+    --yellow-light: #fdf9d0;
+    --cream: #f2f1e8;
+    --white: #f9f9fa;
+    --dark: #232323;
+    --mid: #6b6b6b;
+    --green: #2d9e6b;
+    --green-light: #e6f7f0;
+    --orange: #e07b2a;
+    --orange-light: #fdf0e3;
+    --teal: #2a8fa0;
+    --teal-light: #e3f4f7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--purple);
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  /* Tab row */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .tab {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--mid);
+    border-color: #ddd;
+    transition: all 0.2s;
+  }
+
+  .tab:hover { border-color: var(--purple); color: var(--purple); }
+
+  .tab.active {
+    background: var(--purple);
+    color: #fff;
+    border-color: var(--purple);
+  }
+
+  /* Main card */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(114,75,158,0.10);
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .card-header {
+    background: var(--purple);
+    color: #fff;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-header .badge {
+    background: var(--yellow);
+    color: var(--dark);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+    letter-spacing: 0.03em;
+  }
+
+  .card-header h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .card-body {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 640px) {
+    .card-body { grid-template-columns: 1fr; }
+  }
+
+  /* Code panel */
+  .code-panel {
+    background: #1e1535;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .code-top {
+    background: #2d2048;
+    padding: 8px 14px;
+    font-size: 0.72rem;
+    color: #a89cc8;
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .code-content {
+    padding: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: #e2d9f3;
+  }
+
+  .code-line { display: flex; align-items: flex-start; gap: 6px; position: relative; }
+
+  .line-num {
+    color: #5a4d7a;
+    min-width: 18px;
+    text-align: right;
+    user-select: none;
+    font-size: 0.72rem;
+    padding-top: 1px;
+  }
+
+  .kw { color: #c792ea; }       /* keyword */
+  .fn { color: #82aaff; }       /* function name */
+  .param { color: #ffcb6b; }    /* parameter */
+  .default { color: #e8d227; }  /* default value */
+  .ret { color: #f78c6c; }      /* return */
+  .str { color: #c3e88d; }      /* string/value */
+  .call { color: #89ddff; }     /* function call */
+  .comment { color: #546e7a; font-style: italic; }
+  .out { color: #c3e88d; }      /* output */
+
+  .highlight-line {
+    background: rgba(232,210,39,0.18);
+    border-left: 4px solid var(--yellow);
+    margin: 0 -16px;
+    padding: 0 16px 0 13px;
+    border-radius: 2px;
+    animation: pulse-line 0.6s ease forwards;
+  }
+
+  @keyframes pulse-line {
+    0%   { background: rgba(232,210,39,0.55); }
+    60%  { background: rgba(232,210,39,0.25); }
+    100% { background: rgba(232,210,39,0.18); }
+  }
+
+  /* Right panel */
+  .right-panel { display: flex; flex-direction: column; gap: 14px; }
+
+  .concept-box {
+    background: var(--purple-light);
+    border-left: 4px solid var(--purple);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .concept-box h3 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 6px;
+  }
+
+  .concept-box p {
+    font-size: 0.78rem;
+    color: var(--dark);
+    line-height: 1.55;
+  }
+
+  /* Step-by-step trace */
+  .trace-area { flex: 1; }
+
+  .trace-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--mid);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .steps { display: flex; flex-direction: column; gap: 6px; }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--cream);
+    border: 1.5px solid #e0ddd4;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.5;
+  }
+
+  .step.active {
+    background: var(--yellow-light);
+    border-color: var(--yellow);
+    opacity: 1;
+    box-shadow: 0 2px 8px rgba(232,210,39,0.2);
+  }
+
+  .step.done {
+    opacity: 0.85;
+    background: var(--green-light);
+    border-color: #a8dcc5;
+  }
+
+  .step-num {
+    min-width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--purple);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step.active .step-num { background: var(--yellow); color: var(--dark); }
+  .step.done .step-num { background: var(--green); }
+
+  .step-text { font-size: 0.78rem; line-height: 1.45; color: var(--dark); }
+  .step-text strong { color: var(--purple); }
+
+  /* Output box */
+  .output-box {
+    background: #1e1535;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .output-label {
+    color: #5a4d7a;
+    font-size: 0.72rem;
+  }
+
+  .output-value {
+    color: #c3e88d;
+    transition: all 0.3s;
+  }
+
+  .output-none { color: #546e7a; font-style: italic; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .btn-primary {
+    background: var(--purple);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #5c3a80; }
+  .btn-primary:disabled { background: #bbb; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: var(--cream);
+    color: var(--dark);
+    border: 1.5px solid #ccc;
+  }
+  .btn-secondary:hover { border-color: var(--purple); color: var(--purple); }
+
+  /* Memory table */
+  .memory-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.76rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .memory-table th {
+    background: var(--purple);
+    color: #fff;
+    padding: 5px 10px;
+    text-align: left;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+
+  .memory-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid #e8e5dd;
+    color: var(--dark);
+  }
+
+  .memory-table tr:nth-child(even) td { background: var(--cream); }
+
+  .mem-highlight td { background: var(--yellow-light) !important; font-weight: 600; }
+
+  /* Info pill */
+  .info-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--teal-light);
+    border: 1.5px solid #a8d8e0;
+    color: var(--teal);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .section-hidden { display: none; }
+
+  /* Transition */
+  .panel-section { animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<h1>🐍 Python Functions — Interactive Explorer</h1>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('no-param')">No parameter,<br>no return</button>
+  <button class="tab" onclick="switchTab('with-param')">With parameter,<br>no return</button>
+  <button class="tab" onclick="switchTab('with-return')">With parameter<br>&amp; return</button>
+  <button class="tab" onclick="switchTab('default')">Default<br>parameter</button>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <span class="badge" id="tab-badge">TYPE 1</span>
+    <h2 id="tab-title">Function with no parameter and no return value</h2>
+  </div>
+  <div class="card-body">
+
+    <!-- LEFT: Code -->
+    <div class="code-panel">
+      <div class="code-top">
+        <span class="dot dot-r"></span>
+        <span class="dot dot-y"></span>
+        <span class="dot dot-g"></span>
+        <span style="margin-left:6px">main.py</span>
+      </div>
+      <div class="code-content" id="code-display"></div>
+    </div>
+
+    <!-- RIGHT: Explanation + trace -->
+    <div class="right-panel">
+
+      <div class="concept-box" id="concept-box"></div>
+
+      <div class="trace-area">
+        <div class="trace-title">Step-by-step trace</div>
+        <div class="steps" id="steps-container"></div>
+      </div>
+
+      <div>
+        <div class="trace-title" style="margin-bottom:6px">Memory / output</div>
+        <div id="memory-area"></div>
+        <div class="output-box" style="margin-top:8px">
+          <span class="output-label">Output →</span>
+          <span class="output-value" id="output-display">—</span>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn btn-primary" id="btn-next" onclick="nextStep()">▶ Next step</button>
+        <button class="btn btn-secondary" onclick="resetTrace()">↺ Reset</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Data ────────────────────────────────────────────────────────────────────
+
+const TABS = {
+  'no-param': {
+    badge: 'TYPE 1',
+    title: 'Function with no parameter and no return value',
+    concept: {
+      heading: 'No parameter, no return',
+      text: 'The function does not receive any input and does not send any value back. It simply performs an action (here, printing a message) when called.'
+    },
+    code: [
+      { ln:1, html: `<span class="kw">def</span> <span class="fn">greet</span>():`, id:'def' },
+      { ln:2, html: `&nbsp;&nbsp;&nbsp;&nbsp;<span class="call">print</span>(<span class="str">"Hello, learner!"</span>)`, id:'body' },
+      { ln:3, html: ``, id:'blank' },
+      { ln:4, html: `<span class="fn">greet</span>()`, id:'call' },
+    ],
+    steps: [
+      { line:'def',  text: 'Python reads the <strong>function definition</strong> — it stores the instructions but does not run them yet.' },
+      { line:'call', text: 'The <strong>function call</strong> <code>greet()</code> is encountered — control jumps into the function.' },
+      { line:'body', text: 'The <strong>function body</strong> executes: <code>print("Hello, learner!")</code> runs.' },
+      { line:'call', text: 'The function ends. Control returns to the line after the call. <strong>No value is returned.</strong>' },
+    ],
+    memory: [
+      ['greet', 'function', 'stored after def'],
+    ],
+    memorySteps: [0, 0, 0, 0],
+    outputs: ['—', '—', 'Hello, learner!', 'Hello, learner!'],
+  },
+
+  'with-param': {
+    badge: 'TYPE 2',
+    title: 'Function with parameter, no return value',
+    concept: {
+      heading: 'With parameter, no return',
+      text: 'The function receives an input through a parameter. The argument passed during the call is assigned to the parameter. The function performs an action but does not send any value back.'
+    },
+    code: [
+      { ln:1, html: `<span class="kw">def</span> <span class="fn">showSquare</span>(<span class="param">n</span>):`, id:'def' },
+      { ln:2, html: `&nbsp;&nbsp;&nbsp;&nbsp;<span class="call">print</span>(<span class="param">n</span> * <span class="param">n</span>)`, id:'body' },
+      { ln:3, html: ``, id:'blank' },
+      { ln:4, html: `<span class="fn">showSquare</span>(<span class="str">5</span>)`, id:'call' },
+    ],
+    steps: [
+      { line:'def',  text: 'Python reads the function definition. Parameter <strong>n</strong> is declared but has no value yet.' },
+      { line:'call', text: 'Function call <code>showSquare(5)</code> — argument <strong>5</strong> is passed. Parameter <strong>n</strong> receives the value 5.' },
+      { line:'body', text: 'Function body runs: <code>n * n</code> → <code>5 * 5</code> → <strong>25</strong> is printed.' },
+      { line:'call', text: 'Function ends. Control returns. <strong>n</strong> is destroyed (local scope ends). No value returned.' },
+    ],
+    memory: [
+      ['n', '—', 'parameter, no value yet'],
+      ['n', '5', 'argument assigned'],
+    ],
+    memorySteps: [0, 1, 1, 0],
+    outputs: ['—', '—', '25', '25'],
+  },
+
+  'with-return': {
+    badge: 'TYPE 3',
+    title: 'Function with parameter and return value',
+    concept: {
+      heading: 'With parameter and return value',
+      text: 'The function receives inputs through parameters, processes them, and sends a result back to the caller using the <code>return</code> statement. The returned value can be stored in a variable.'
+    },
+    code: [
+      { ln:1, html: `<span class="kw">def</span> <span class="fn">add</span>(<span class="param">a</span>, <span class="param">b</span>):`, id:'def' },
+      { ln:2, html: `&nbsp;&nbsp;&nbsp;&nbsp;result = <span class="param">a</span> + <span class="param">b</span>`, id:'body1' },
+      { ln:3, html: `&nbsp;&nbsp;&nbsp;&nbsp;<span class="ret">return</span> result`, id:'ret' },
+      { ln:4, html: ``, id:'blank' },
+      { ln:5, html: `total = <span class="fn">add</span>(<span class="str">5</span>, <span class="str">7</span>)`, id:'call' },
+      { ln:6, html: `<span class="call">print</span>(total)`, id:'print' },
+    ],
+    steps: [
+      { line:'def',   text: 'Function definition read. Parameters <strong>a</strong> and <strong>b</strong> declared.' },
+      { line:'call',  text: 'Call <code>add(5, 7)</code> — <strong>a = 5</strong>, <strong>b = 7</strong>. Control enters the function.' },
+      { line:'body1', text: '<code>result = a + b</code> → <code>5 + 7</code> → <strong>result = 12</strong>.' },
+      { line:'ret',   text: '<code>return result</code> — value <strong>12</strong> is sent back to the caller. <strong>total</strong> receives 12.' },
+      { line:'print', text: '<code>print(total)</code> → <strong>12</strong> is displayed.' },
+    ],
+    memory: [
+      ['a', '—', ''],
+      ['b', '—', ''],
+      ['result', '—', ''],
+      ['total', '—', ''],
+    ],
+    memorySteps: [0, 1, 2, 3, 3],
+    memoryByStep: [
+      [],
+      [['a','5','argument'],['b','7','argument']],
+      [['a','5',''],['b','7',''],['result','12','a + b']],
+      [['a','5',''],['b','7',''],['result','12',''],['total','12','returned value']],
+      [['a','5',''],['b','7',''],['result','12',''],['total','12','']],
+    ],
+    outputs: ['—', '—', '—', '—', '12'],
+  },
+
+  'default': {
+    badge: 'TYPE 4',
+    title: 'Function with default parameter',
+    concept: {
+      heading: 'Default parameter',
+      text: 'A default value is assigned to a parameter in the function header. If no argument is passed for that parameter, the default is used. If an argument is passed, it overrides the default.'
+    },
+    code: [
+      { ln:1, html: `<span class="kw">def</span> <span class="fn">showInterest</span>(<span class="param">principal</span>, <span class="param">rate</span>=<span class="default">5</span>):`, id:'def' },
+      { ln:2, html: `&nbsp;&nbsp;&nbsp;&nbsp;interest = (principal * rate) / <span class="str">100</span>`, id:'body' },
+      { ln:3, html: `&nbsp;&nbsp;&nbsp;&nbsp;<span class="call">print</span>(interest)`, id:'print' },
+      { ln:4, html: ``, id:'blank' },
+      { ln:5, html: `<span class="comment"># Call 1 — default rate used</span>`, id:'c1label' },
+      { ln:6, html: `<span class="fn">showInterest</span>(<span class="str">1000</span>)`, id:'call1' },
+      { ln:7, html: ``, id:'blank2' },
+      { ln:8, html: `<span class="comment"># Call 2 — rate overridden</span>`, id:'c2label' },
+      { ln:9, html: `<span class="fn">showInterest</span>(<span class="str">1000</span>, <span class="str">8</span>)`, id:'call2' },
+    ],
+    steps: [
+      { line:'def',    text: 'Function defined. <strong>principal</strong> has no default. <strong>rate</strong> has a default value of <strong>5</strong>.' },
+      { line:'call1',  text: 'Call 1: <code>showInterest(1000)</code> — only one argument. <strong>principal = 1000</strong>, <strong>rate uses default = 5</strong>.' },
+      { line:'body',   text: '<code>interest = (1000 × 5) / 100</code> → <strong>50.0</strong>.' },
+      { line:'print',  text: '<code>print(50.0)</code> → output: <strong>50.0</strong>. Call 1 complete.' },
+      { line:'call2',  text: 'Call 2: <code>showInterest(1000, 8)</code> — two arguments. <strong>principal = 1000</strong>, <strong>rate = 8</strong> (default overridden).' },
+      { line:'body',   text: '<code>interest = (1000 × 8) / 100</code> → <strong>80.0</strong>.' },
+      { line:'print',  text: '<code>print(80.0)</code> → output: <strong>80.0</strong>. Call 2 complete.' },
+    ],
+    memory: [],
+    memoryByStep: [
+      [['principal','—',''],['rate','5','default']],
+      [['principal','1000','arg'],['rate','5','default used']],
+      [['principal','1000',''],['rate','5',''],['interest','50.0','calculated']],
+      [['principal','1000',''],['rate','5',''],['interest','50.0','']],
+      [['principal','1000','new call'],['rate','8','default overridden']],
+      [['principal','1000',''],['rate','8',''],['interest','80.0','calculated']],
+      [['principal','1000',''],['rate','8',''],['interest','80.0','']],
+    ],
+    outputs: ['—', '—', '—', '50.0', '50.0', '—', '80.0'],
+  },
+};
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let currentTab = 'no-param';
+let currentStep = -1;
+let currentHighlightId = null;
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', Object.keys(TABS)[i] === tab);
+  });
+  resetTrace();
+}
+
+function renderCode(highlightId) {
+  const data = TABS[currentTab];
+  const lines = data.code;
+  let html = '';
+  lines.forEach(line => {
+    const hl = line.id === highlightId ? ' highlight-line' : '';
+    if (line.html === '') {
+      html += `<div class="code-line${hl}" style="height:10px"></div>`;
+    } else {
+      html += `<div class="code-line${hl}"><span class="line-num">${line.ln}</span><span>${line.html}</span></div>`;
+    }
+  });
+  document.getElementById('code-display').innerHTML = html;
+}
+
+function renderConcept() {
+  const c = TABS[currentTab].concept;
+  document.getElementById('concept-box').innerHTML =
+    `<h3>${c.heading}</h3><p>${c.text}</p>`;
+}
+
+function renderSteps() {
+  const data = TABS[currentTab];
+  const cont = document.getElementById('steps-container');
+  cont.innerHTML = data.steps.map((s, i) => `
+    <div class="step" id="step-${i}">
+      <div class="step-num">${i+1}</div>
+      <div class="step-text">${s.text}</div>
+    </div>
+  `).join('');
+}
+
+function renderMemory(stepIdx) {
+  const data = TABS[currentTab];
+  const rows = data.memoryByStep ? data.memoryByStep[stepIdx] : null;
+  const area = document.getElementById('memory-area');
+  if (!rows || rows.length === 0) { area.innerHTML = ''; return; }
+  let html = `<table class="memory-table"><thead><tr><th>Variable</th><th>Value</th><th>Note</th></tr></thead><tbody>`;
+  rows.forEach((r, i) => {
+    const last = i === rows.length - 1;
+    html += `<tr class="${last ? 'mem-highlight' : ''}"><td>${r[0]}</td><td>${r[1]}</td><td style="color:var(--mid)">${r[2]}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  area.innerHTML = html;
+}
+
+function renderHeader() {
+  const data = TABS[currentTab];
+  document.getElementById('tab-badge').textContent = data.badge;
+  document.getElementById('tab-title').textContent = data.title;
+}
+
+function resetTrace() {
+  currentStep = -1;
+  currentHighlightId = null;
+  renderHeader();
+  renderCode(null);
+  renderConcept();
+  renderSteps();
+  renderMemory(0);
+  document.getElementById('output-display').textContent = '—';
+  document.getElementById('output-display').className = 'output-value output-none';
+  document.getElementById('btn-next').disabled = false;
+  document.getElementById('btn-next').textContent = '▶ Next step';
+}
+
+function updateStepClasses() {
+  const data = TABS[currentTab];
+  data.steps.forEach((_, i) => {
+    const el = document.getElementById(`step-${i}`);
+    if (!el) return;
+    const numEl = el.querySelector('.step-num');
+    if (i < currentStep) {
+      el.className = 'step done';
+      numEl.textContent = '✓';
+    } else if (i === currentStep) {
+      el.className = 'step active';
+      numEl.textContent = i + 1;
+      // Scroll active step into view smoothly
+      el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    } else {
+      el.className = 'step';
+      numEl.textContent = i + 1;
+    }
+  });
+}
+
+function updateCodeHighlight(newId) {
+  currentHighlightId = newId;
+  const data = TABS[currentTab];
+  data.code.forEach(line => {
+    const lineEls = document.querySelectorAll(`[data-line-id="${line.id}"]`);
+    lineEls.forEach(el => {
+      if (line.id === newId) {
+        // Force reflow so animation re-triggers even on same line
+        el.classList.remove('highlight-line');
+        void el.offsetWidth; // reflow
+        el.classList.add('highlight-line');
+      } else {
+        el.classList.remove('highlight-line');
+      }
+    });
+  });
+}
+
+function renderCode(highlightId) {
+  currentHighlightId = highlightId;
+  const data = TABS[currentTab];
+  const lines = data.code;
+  let html = '';
+  lines.forEach(line => {
+    const hl = line.id === highlightId ? ' highlight-line' : '';
+    if (line.html === '') {
+      html += `<div class="code-line${hl}" data-line-id="${line.id}" style="height:10px"></div>`;
+    } else {
+      html += `<div class="code-line${hl}" data-line-id="${line.id}"><span class="line-num">${line.ln}</span><span>${line.html}</span></div>`;
+    }
+  });
+  document.getElementById('code-display').innerHTML = html;
+}
+
+function nextStep() {
+  const data = TABS[currentTab];
+  currentStep++;
+
+  if (currentStep >= data.steps.length) {
+    currentStep = data.steps.length - 1;
+    return;
+  }
+
+  // Update code highlight without full re-render
+  updateCodeHighlight(data.steps[currentStep].line);
+
+  // Update step classes only (no innerHTML rebuild)
+  updateStepClasses();
+
+  // Memory
+  if (data.memoryByStep) renderMemory(currentStep);
+
+  // Output
+  const out = data.outputs[currentStep];
+  const outEl = document.getElementById('output-display');
+  outEl.textContent = out === '—' ? '—' : out;
+  outEl.className = out === '—' ? 'output-value output-none' : 'output-value';
+
+  // Disable when done
+  if (currentStep === data.steps.length - 1) {
+    document.getElementById('btn-next').disabled = true;
+    document.getElementById('btn-next').textContent = '✓ Done';
+  }
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+resetTrace();
+</script>
+</body>
+</html>
