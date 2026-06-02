@@ -475,6 +475,7 @@ font-weight: 500;
 
       <div class="controls-row">
         <button class="btn btn-primary" id="btn-next" onclick="nextStep()">▶ Next step</button>
+        <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" disabled>◀ Previous</button>
         <button class="btn btn-secondary" onclick="resetTrace()">↺ Reset</button>
       </div>
     </div>
@@ -747,6 +748,7 @@ function resetTrace() {
   const btn = document.getElementById('btn-next');
   btn.disabled = false;
   btn.textContent = '▶ Next step';
+  document.getElementById('btn-prev').disabled = true;
 }
 
 // ── Next step ─────────────────────────────────────────────────────────────────
@@ -764,10 +766,37 @@ function nextStep() {
   outEl.textContent = out === '—' ? '—' : out;
   outEl.className   = out === '—' ? 'output-value output-none' : 'output-value';
 
+  document.getElementById('btn-prev').disabled = false;
+
   if (currentStep === data.steps.length - 1) {
     document.getElementById('btn-next').disabled = true;
     document.getElementById('btn-next').textContent = '✓ Done';
   }
+}
+
+// ── Previous step ─────────────────────────────────────────────────────────────
+function prevStep() {
+  const data = TABS[currentTab];
+  if (currentStep <= 0) {
+    resetTrace();
+    return;
+  }
+  currentStep--;
+
+  updateCodeHighlight(data.steps[currentStep].line);
+  updateStepClasses();
+  renderMemory(currentStep);
+
+  const out = data.outputs[currentStep];
+  const outEl = document.getElementById('output-display');
+  outEl.textContent = out === '—' ? '—' : out;
+  outEl.className   = out === '—' ? 'output-value output-none' : 'output-value';
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.disabled = false;
+  btnNext.textContent = '▶ Next step';
+
+  document.getElementById('btn-prev').disabled = currentStep === 0;
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
