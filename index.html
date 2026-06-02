@@ -19,9 +19,9 @@
     --green-light: #e6f7f0;
     --teal: #2a8fa0;
   }
-
+ 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   html, body {
     width: 100%;
     height: 100%;
@@ -31,7 +31,7 @@
     justify-content: center;
     font-family: 'Outfit', sans-serif;
   }
-
+ 
   /* ── 16:9 slide wrapper ── */
   .slide {
     width: 1280px;
@@ -43,7 +43,7 @@
     overflow: hidden;
     transform-origin: top left;
   }
-
+ 
   /* ── Header bar ── */
   .slide-header {
     background: var(--purple);
@@ -54,13 +54,13 @@
     padding: 0 24px;
     flex-shrink: 0;
   }
-
+ 
   .slide-header .title-group {
     display: flex;
     align-items: center;
     gap: 10px;
   }
-
+ 
   .slide-header .badge {
     background: var(--yellow);
     color: var(--dark);
@@ -70,20 +70,20 @@
     border-radius: 8px;
     letter-spacing: 0.04em;
   }
-
+ 
   .slide-header h1 {
     font-size: 1.05rem;
     font-weight: 600;
     color: #fff;
     letter-spacing: -0.01em;
   }
-
+ 
   /* Tab pills in header */
   .tabs {
     display: flex;
     gap: 5px;
   }
-
+ 
   .tab {
     padding: 5px 14px;
     border-radius: 14px;
@@ -97,15 +97,15 @@
     transition: all 0.18s;
     white-space: nowrap;
   }
-
+ 
   .tab:hover { border-color: var(--yellow); color: var(--yellow); }
-
+ 
   .tab.active {
     background: var(--yellow);
     color: var(--dark);
     border-color: var(--yellow);
   }
-
+ 
   /* ── Main body ── */
   .slide-body {
     flex: 1;
@@ -114,7 +114,7 @@
     gap: 0;
     overflow: hidden;
   }
-
+ 
   /* ── Left: code panel ── */
   .code-panel {
     background: #1a1030;
@@ -122,7 +122,7 @@
     flex-direction: column;
     border-right: 1px solid #2a1f45;
   }
-
+ 
   .code-top {
     background: #261848;
     padding: 7px 16px;
@@ -134,12 +134,12 @@
     gap: 5px;
     flex-shrink: 0;
   }
-
+ 
   .dot { width: 9px; height: 9px; border-radius: 50%; }
   .dot-r { background: #ff5f57; }
   .dot-y { background: #febc2e; }
   .dot-g { background: #28c840; }
-
+ 
   .code-content {
     padding: 16px 20px;
     font-family: 'DM Mono', monospace;
@@ -148,7 +148,7 @@
     color: #e2d9f3;
     flex: 1;
   }
-
+ 
   .code-line {
     display: flex;
     align-items: flex-start;
@@ -156,7 +156,7 @@
     border-radius: 3px;
     transition: background 0.1s;
   }
-
+ 
   .line-num {
     color: #4a3d6a;
     min-width: 20px;
@@ -166,7 +166,7 @@
     padding-top: 2px;
     flex-shrink: 0;
   }
-
+ 
   .kw      { color: #c792ea; }
   .fn      { color: #82aaff; }
   .param   { color: #ffcb6b; }
@@ -175,7 +175,7 @@
   .str     { color: #c3e88d; }
   .call    { color: #89ddff; }
   .comment { color: #4a5e6a; font-style: italic; }
-
+ 
   .highlight-line {
     background: rgba(232,210,39,0.16) !important;
     border-left: 3px solid var(--yellow);
@@ -183,13 +183,13 @@
     padding: 0 16px 0 13px;
     animation: pulse-line 0.55s ease forwards;
   }
-
+ 
   @keyframes pulse-line {
     0%   { background: rgba(232,210,39,0.52); }
     65%  { background: rgba(232,210,39,0.22); }
     100% { background: rgba(232,210,39,0.16); }
   }
-
+ 
   /* ── Right: trace panel ── */
   .right-panel {
     display: flex;
@@ -197,7 +197,7 @@
     background: var(--white);
     overflow: hidden;
   }
-
+ 
   /* concept strip */
   .concept-strip {
     background: var(--purple-light);
@@ -205,20 +205,20 @@
     padding: 10px 18px;
     flex-shrink: 0;
   }
-
+ 
   .concept-strip h3 {
     font-size: 1.2 rem;
     font-weight: 700;
     color: var(--purple);
     margin-bottom: 3px;
   }
-
+ 
   .concept-strip p {
     font-size: 1 rem;
     color: var(--dark);
     line-height: 1.45;
   }
-
+ 
   /* steps + memory in a row */
   .trace-memory-row {
     display: grid;
@@ -228,14 +228,14 @@
     overflow: hidden;
     min-height: 0;
   }
-
+ 
   /* steps column */
   .steps-col {
     padding: 12px 14px;
     overflow-y: auto;
     border-right: 1px solid #e8e5dd;
   }
-
+ 
   .section-label {
     font-size: 0.75rem;
     font-weight: 700;
@@ -244,9 +244,9 @@
     letter-spacing: 0.07em;
     margin-bottom: 8px;
   }
-
+ 
   .steps { display: flex; flex-direction: column; gap: 6px; }
-
+ 
   .step {
     display: flex;
     align-items: flex-start;
@@ -258,20 +258,20 @@
     opacity: 0.45;
     transition: all 0.2s;
   }
-
+ 
   .step.active {
     background: var(--yellow-light);
     border-color: var(--yellow);
     opacity: 1;
     box-shadow: 0 2px 6px rgba(232,210,39,0.2);
   }
-
+ 
   .step.done {
     opacity: 0.8;
     background: var(--green-light);
     border-color: #a8dcc5;
   }
-
+ 
   .step-num {
     min-width: 22px;
     height: 22px;
@@ -286,16 +286,16 @@
     flex-shrink: 0;
     margin-top: 1px;
   }
-
+ 
   .step.active .step-num { background: var(--yellow); color: var(--dark); }
   .step.done  .step-num  { background: var(--green); }
-
+ 
   .step-text {
     font-size: 1 rem;
     line-height: 1.45;
     color: var(--dark);
   }
-
+ 
   .step-text strong { color: var(--purple); }
   .step-text code {
     font-family: 'DM Mono', monospace;
@@ -304,7 +304,7 @@
     padding: 1px 5px;
     border-radius: 3px;
   }
-
+ 
   /* memory column */
   .memory-col {
     width: 220px;
@@ -315,14 +315,14 @@
     background: var(--cream);
     border-left: 1px solid #e0ddd4;
   }
-
+ 
   .memory-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8rem;
     font-family: 'DM Mono', monospace;
   }
-
+ 
   .memory-table th {
     background: var(--purple);
     color: #fff;
@@ -332,16 +332,16 @@
     font-weight: 600;
     font-size: 0.75rem;
   }
-
+ 
   .memory-table td {
     padding: 5px 9px;
     border-bottom: 1px solid #e0ddd4;
     color: var(--dark);
     background: var(--white);
   }
-
+ 
   .mem-highlight td { background: var(--yellow-light) !important; font-weight: 600; }
-
+ 
   /* output row */
   .output-row {
     background: #1a1030;
@@ -352,16 +352,16 @@
     flex-shrink: 0;
     border-top: 1px solid #2a1f45;
   }
-
+ 
   .output-label {
     color: #6a5a8a;
     font-family: 'DM Mono', monospace;
     font-size: 1.2rem;
 font-weight: 500;
-
+ 
     flex-shrink: 0;
   }
-
+ 
   .output-value {
     color: #c3e88d;
     font-family: 'DM Mono', monospace;
@@ -369,9 +369,9 @@ font-weight: 500;
     font-weight: 500;
     transition: all 0.25s;
   }
-
+ 
   .output-none { color: #4a3d6a; font-style: italic; }
-
+ 
   /* controls row */
   .controls-row {
     padding: 10px 18px;
@@ -382,7 +382,7 @@ font-weight: 500;
     flex-shrink: 0;
     background: var(--white);
   }
-
+ 
   .btn {
     padding: 7px 20px;
     border-radius: 6px;
@@ -393,18 +393,18 @@ font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;
   }
-
+ 
   .btn-primary { background: var(--purple); color: #fff; }
   .btn-primary:hover { background: #5c3a80; }
   .btn-primary:disabled { background: #bbb; cursor: not-allowed; }
-
+ 
   .btn-secondary {
     background: var(--cream);
     color: var(--dark);
     border: 1.5px solid #ccc;
   }
   .btn-secondary:hover { border-color: var(--purple); color: var(--purple); }
-
+ 
   /* ── Footer ── */
   .slide-footer {
     height: 26px;
@@ -414,7 +414,7 @@ font-weight: 500;
     justify-content: center;
     flex-shrink: 0;
   }
-
+ 
   .slide-footer span {
     font-size: 0.76rem;
     color: rgba(255,255,255,0.55);
@@ -423,9 +423,9 @@ font-weight: 500;
 </style>
 </head>
 <body>
-
+ 
 <div class="slide" id="slide">
-
+ 
   <!-- HEADER -->
   <div class="slide-header">
     <div class="title-group">
@@ -439,10 +439,10 @@ font-weight: 500;
       <button class="tab" onclick="switchTab('default')">Default parameter</button>
     </div>
   </div>
-
+ 
   <!-- BODY -->
   <div class="slide-body">
-
+ 
     <!-- LEFT: code -->
     <div class="code-panel">
       <div class="code-top">
@@ -457,11 +457,11 @@ font-weight: 500;
         <span class="output-value output-none" id="output-display">—</span>
       </div>
     </div>
-
+ 
     <!-- RIGHT: trace -->
     <div class="right-panel">
       <div class="concept-strip" id="concept-box"></div>
-
+ 
       <div class="trace-memory-row">
         <div class="steps-col">
           <div class="section-label">Step-by-step trace</div>
@@ -472,23 +472,23 @@ font-weight: 500;
           <div id="memory-area"></div>
         </div>
       </div>
-
+ 
       <div class="controls-row">
         <button class="btn btn-primary" id="btn-next" onclick="nextStep()">▶ Next step</button>
         <button class="btn btn-secondary" id="btn-prev" onclick="prevStep()" disabled>◀ Previous</button>
         <button class="btn btn-secondary" onclick="resetTrace()">↺ Reset</button>
       </div>
     </div>
-
+ 
   </div>
-
+ 
   <!-- FOOTER -->
   <div class="slide-footer">
     <span>© CuriousEd.ai</span>
   </div>
-
+ 
 </div>
-
+ 
 <script>
 // ── Scale slide to fit viewport ──────────────────────────────────────────────
 function scaleSlide() {
@@ -506,7 +506,7 @@ function scaleSlide() {
 }
 window.addEventListener('resize', scaleSlide);
 scaleSlide();
-
+ 
 // ── Data ─────────────────────────────────────────────────────────────────────
 const TABS = {
   'no-param': {
@@ -536,7 +536,7 @@ const TABS = {
     ],
     outputs: ['—','—','Hello, learner!','Hello, learner!'],
   },
-
+ 
   'with-param': {
     badge: 'Type 2',
     title: 'Function with parameter, no return value',
@@ -564,7 +564,7 @@ const TABS = {
     ],
     outputs: ['—','—','25','25'],
   },
-
+ 
   'with-return': {
     badge: 'Type 3',
     title: 'Function with parameter and return value',
@@ -596,7 +596,7 @@ const TABS = {
     ],
     outputs: ['—','—','—','—','12'],
   },
-
+ 
   'default': {
     badge: 'Type 4',
     title: 'Function with default parameter',
@@ -636,12 +636,12 @@ const TABS = {
     outputs: ['—','—','—','50.0','50.0','—','80.0'],
   },
 };
-
+ 
 // ── State ─────────────────────────────────────────────────────────────────────
 let currentTab = 'no-param';
 let currentStep = -1;
 let currentHighlightId = null;
-
+ 
 // ── Tab switch ────────────────────────────────────────────────────────────────
 function switchTab(tab) {
   currentTab = tab;
@@ -650,7 +650,7 @@ function switchTab(tab) {
   });
   resetTrace();
 }
-
+ 
 // ── Render code (full rebuild, only on tab switch / reset) ────────────────────
 function renderCode(highlightId) {
   currentHighlightId = highlightId;
@@ -666,7 +666,7 @@ function renderCode(highlightId) {
   });
   document.getElementById('code-display').innerHTML = html;
 }
-
+ 
 // ── Update highlight only (no rebuild) ────────────────────────────────────────
 function updateCodeHighlight(newId) {
   currentHighlightId = newId;
@@ -682,14 +682,14 @@ function updateCodeHighlight(newId) {
     }
   });
 }
-
+ 
 // ── Render concept strip ───────────────────────────────────────────────────────
 function renderConcept() {
   const c = TABS[currentTab].concept;
   document.getElementById('concept-box').innerHTML =
     `<h3>${c.heading}</h3><p>${c.text}</p>`;
 }
-
+ 
 // ── Render step list (full rebuild, only on tab switch / reset) ───────────────
 function renderSteps() {
   const data = TABS[currentTab];
@@ -700,7 +700,7 @@ function renderSteps() {
     </div>
   `).join('');
 }
-
+ 
 // ── Update step classes (no rebuild) ─────────────────────────────────────────
 function updateStepClasses() {
   TABS[currentTab].steps.forEach((_, i) => {
@@ -712,7 +712,7 @@ function updateStepClasses() {
     else                       { el.className = 'step';        num.textContent = i + 1; }
   });
 }
-
+ 
 // ── Render memory table ───────────────────────────────────────────────────────
 function renderMemory(idx) {
   const rows = (TABS[currentTab].memoryByStep || [])[idx];
@@ -725,14 +725,14 @@ function renderMemory(idx) {
   html += '</tbody></table>';
   area.innerHTML = html;
 }
-
+ 
 // ── Render header ─────────────────────────────────────────────────────────────
 function renderHeader() {
   const d = TABS[currentTab];
   document.getElementById('tab-badge').textContent = d.badge;
   document.getElementById('tab-title').textContent = d.title;
 }
-
+ 
 // ── Reset ─────────────────────────────────────────────────────────────────────
 function resetTrace() {
   currentStep = -1;
@@ -750,30 +750,30 @@ function resetTrace() {
   btn.textContent = '▶ Next step';
   document.getElementById('btn-prev').disabled = true;
 }
-
+ 
 // ── Next step ─────────────────────────────────────────────────────────────────
 function nextStep() {
   const data = TABS[currentTab];
   if (currentStep >= data.steps.length - 1) return;
   currentStep++;
-
+ 
   updateCodeHighlight(data.steps[currentStep].line);
   updateStepClasses();
   renderMemory(currentStep);
-
+ 
   const out = data.outputs[currentStep];
   const outEl = document.getElementById('output-display');
   outEl.textContent = out === '—' ? '—' : out;
   outEl.className   = out === '—' ? 'output-value output-none' : 'output-value';
-
+ 
   document.getElementById('btn-prev').disabled = false;
-
+ 
   if (currentStep === data.steps.length - 1) {
     document.getElementById('btn-next').disabled = true;
     document.getElementById('btn-next').textContent = '✓ Done';
   }
 }
-
+ 
 // ── Previous step ─────────────────────────────────────────────────────────────
 function prevStep() {
   const data = TABS[currentTab];
@@ -782,23 +782,23 @@ function prevStep() {
     return;
   }
   currentStep--;
-
+ 
   updateCodeHighlight(data.steps[currentStep].line);
   updateStepClasses();
   renderMemory(currentStep);
-
+ 
   const out = data.outputs[currentStep];
   const outEl = document.getElementById('output-display');
   outEl.textContent = out === '—' ? '—' : out;
   outEl.className   = out === '—' ? 'output-value output-none' : 'output-value';
-
+ 
   const btnNext = document.getElementById('btn-next');
   btnNext.disabled = false;
   btnNext.textContent = '▶ Next step';
-
+ 
   document.getElementById('btn-prev').disabled = currentStep === 0;
 }
-
+ 
 // ── Init ──────────────────────────────────────────────────────────────────────
 resetTrace();
 </script>
